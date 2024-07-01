@@ -1,10 +1,11 @@
 import React from 'react'
 import Home from './pages/home'
-import NotFound from './pages/NotFound'
 import Portfolio from './pages/Portfolio'
+import ThreeScene from './ThreeScene'
+import NotFound from './pages/NotFound'
 
 import './App.css'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 function App() {
 
   return (
@@ -13,7 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Portfolio" element={<Portfolio />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/not-found" replace />} />
+          <Route path="/not-found" element={<NotFound />} />
         </Routes>
       </Router>
     </>

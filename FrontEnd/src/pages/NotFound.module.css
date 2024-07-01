@@ -1,0 +1,65 @@
+.Container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    min-height: 100vh;
+    background: linear-gradient(293deg, #b6bb87, #399ddd, #d01ead, #5050ee, #7b0cf7);
+    background-size: 300% 300%;
+    animation: gradient-animation 45s ease infinite;
+}
+
+/* Animation for the background gradient */
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.Container h2 {
+    font-size: 5rem;
+    color: #FECE2F;
+    padding: 0;
+    margin: 0;
+}
+
+.GroupDesc {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.GroupDesc p {
+    font-size: 1.1rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.GoBackBtn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #FECE2F;
+    color: #000000;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.GoBackBtn:hover {
+    background-color: #ffc400;
+}
