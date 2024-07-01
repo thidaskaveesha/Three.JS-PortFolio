@@ -1,9 +1,7 @@
 import React from 'react'
 import Home from './pages/home'
 import Portfolio from './pages/Portfolio'
-import ThreeScene from './ThreeScene'
 import NotFound from './pages/NotFound'
-
 import './App.css'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 function App() {
