@@ -1,33 +1,41 @@
-import React, { Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei'; // Importing necessary components from drei
-import Model from "../components/Model"; // Importing Model component
-import style from "./Portfolio.module.css"; // Importing optional CSS module for styling
-
-// Custom loading component for Suspense fallback
-const Loader = () => {
-    return (
-        <mesh>
-            {/* Creating a simple box geometry */}
-            <boxGeometry args={[1, 1, 1]} />
-            {/* Applying a light gray material */}
-            <meshStandardMaterial color="lightgray" />
-        </mesh>
-    );
-};
+import { OrbitControls, Environment } from '@react-three/drei';
+import Model from "../components/Model";
+import Loader from "../components/Loading";
+import style from "./Portfolio.module.css";
 
 function Portfolio() {
+    // State to handle loading status and current message
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentMessage, setCurrentMessage] = useState('');
+
+    // useEffect to manage the loading timer
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false); // Set loading to false after 5 seconds
+        }, 5000);
+
+        // Clean up the timer on component unmount
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Function to update the current message based on the model's rotation
+    const handleShowMessage = (message) => {
+        setCurrentMessage(message);
+    };
+
     return (
-        <div className={style.Container}> {/* Applying a CSS class for styling purposes */}
-            {/* Setting up the Canvas with a camera */}
-            <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
-                {/* Adding fog to the scene */}
+        <div className={style.Container}>
+            {/* Canvas for rendering the 3D scene */}
+            <Canvas shadows camera={{ position: [0, 5, 8], fov: 30 }}>
+                {/* Fog to add depth to the scene */}
                 <fog attach="fog" args={["#87CEEB", 10, 50]} />
-                {/* Ambient light with 40% intensity */}
+                {/* Ambient light for general illumination */}
                 <ambientLight intensity={0.4} />
-                {/* Hemisphere light with sky and ground colors */}
+                {/* Hemisphere light for soft, diffused lighting */}
                 <hemisphereLight skyColor={"#ffffff"} groundColor={"#444444"} intensity={0.6} />
-                {/* Directional light with shadow casting */}
+                {/* Directional light for main lighting source */}
                 <directionalLight
                     position={[5, 10, 7.5]}
                     intensity={1}
@@ -35,20 +43,30 @@ function Portfolio() {
                     shadow-mapSize-width={2048}
                     shadow-mapSize-height={2048}
                 />
-                {/* Point light with 50% intensity */}
+                {/* Additional point and spot lights for more dynamic lighting */}
                 <pointLight position={[-10, 10, -10]} intensity={0.5} />
-                {/* Spot light with specific position and properties */}
                 <spotLight position={[15, 20, 5]} angle={0.3} penumbra={1} intensity={1} castShadow />
-                {/* Adding Suspense for async loading fallback */}
-                <Suspense fallback={<Loader />}>
-                    {/* Adding an environment preset for lighting and background */}
-                    <Environment preset="sunset" />
-                    {/* Loading your 3D model using the Model component */}
-                    <Model path="/Model/scene.gltf" />
-                    {/* Adding OrbitControls for interactive camera movement */}
-                    <OrbitControls />
-                </Suspense>
+
+                {isLoading ? (
+                    // Show loading component while the scene is loading
+                    <Loader />
+                ) : (
+                    // Show the 3D scene when loading is complete
+                    <Suspense fallback={<Loader />}>
+                        <Environment preset="sunset" />
+                        {/* Model component with message handling */}
+                        <Model path="/Model/scene.gltf" onShowMessage={handleShowMessage} />
+                        {/* OrbitControls to control the camera */}
+                        {/*<OrbitControls enableRotate={true} enableZoom={true} enablePan={false} minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} />*/}
+                    </Suspense>
+                )}
             </Canvas>
+            {/* Display the current message as a bubble at the bottom of the page */}
+            {currentMessage && (
+                <div className={`${style.BubbleMessage} ${currentMessage ? style.show : ''}`}>
+                    {currentMessage}
+                </div>
+            )}
         </div>
     );
 }
